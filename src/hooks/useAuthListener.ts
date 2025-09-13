@@ -1,6 +1,6 @@
 // Hook listener de auth - español (AR)
 import { auth, onAuthStateChanged } from '@/services/firebase';
-import { ensureUserProfile } from '@/services/userService';
+import { ensureUserProfile, migrateAchievementXp, recalcUserLevel } from '@/services/userService';
 import { useUserStore } from '@/store/userStore';
 import { useEffect, useState } from 'react';
 
@@ -13,8 +13,12 @@ export function useAuthListener() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       setUser(user?.uid);
       if (user?.uid) {
-        // Garantiza que el perfil exista (por ejemplo login con proveedor externo futuro)
         try { await ensureUserProfile(user.uid); } catch (e) { /* noop */ }
+        // Migración silenciosa: sólo hace algo si achievementsXpTotal aún no existe
+        try {
+          await migrateAchievementXp(user.uid);
+          await recalcUserLevel(user.uid);
+        } catch (e) { /* noop */ }
         await refreshProfile();
       }
       if (initializing) setInitializing(false);

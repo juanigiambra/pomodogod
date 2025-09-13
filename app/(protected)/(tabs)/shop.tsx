@@ -1,6 +1,7 @@
 // Pantalla Shop protegida - español (AR)
 import { ConfettiBurst } from '@/components/ConfettiBurst';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { syncAchievements } from '@/services/achievementsService';
 import { purchaseItem } from '@/services/rewardsService';
 import { useInventoryStore } from '@/store/inventoryStore';
 import { useUserStore } from '@/store/userStore';
@@ -36,6 +37,7 @@ export default function ShopScreen() {
 			try { 
 				await purchaseItem(uid, item); 
 				await Promise.all([actions.refreshProfile(), invActions.load()]);
+				await syncAchievements(uid);
 				setConfettiKey(k => k + 1);
 				Alert.alert('Compra', '¡Item comprado!'); 
 			}

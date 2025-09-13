@@ -3,6 +3,7 @@ import { AvatarPreview } from '@/components/AvatarPreview';
 import InventoryGridItem from '@/components/InventoryGridItem';
 import { useAppTheme } from '@/hooks/useAppTheme';
 // Servicios ahora gestionados vía inventoryStore
+import { syncAchievements } from '@/services/achievementsService';
 import { useInventoryStore } from '@/store/inventoryStore';
 import { useUserStore } from '@/store/userStore';
 import { InventoryItem } from '@/types';
@@ -21,7 +22,7 @@ export default function AvatarScreen() {
 
 	async function handleEquip(item: InventoryItem) {
 		if (!uid) { Alert.alert('Login requerido', 'Iniciá sesión para equipar.'); return; }
-		try { await invActions.equip(item); } catch (e: any) { Alert.alert('Error', e.message); }
+		try { await invActions.equip(item); await syncAchievements(uid); } catch (e: any) { Alert.alert('Error', e.message); }
 	}
 
 	const equippedMap: Record<string, InventoryItem | undefined> = {};

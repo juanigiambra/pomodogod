@@ -78,6 +78,12 @@ export default function ProfileScreen() {
             <Text style={[styles.cardHint, { color: colors.textDim }]}>Métricas y sesiones</Text>
           </Pressable>
         </Link>
+        <Link href="/(protected)/profile/logros" asChild>
+          <Pressable style={[styles.navCard, { backgroundColor: colors.card, borderColor: colors.border }]}> 
+            <Text style={[styles.cardTitle, { color: colors.text }]}>Logros</Text>
+            <Text style={[styles.cardHint, { color: colors.textDim }]}>Desbloqueos y progreso</Text>
+          </Pressable>
+        </Link>
         <Link href="/(protected)/profile/configuracion" asChild>
           <Pressable style={[styles.navCard, { backgroundColor: colors.card, borderColor: colors.border }]}> 
             <Text style={[styles.cardTitle, { color: colors.text }]}>Configuración</Text>

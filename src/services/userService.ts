@@ -2,20 +2,22 @@
 import { InventoryItem, Session, UserProfile } from '@/types';
 import { COINS_PER_POMODORO, levelFromXp, xpForSession } from '@/utils/xp';
 import {
-    addDoc,
-    collection,
-    doc,
-    getDoc,
-    getDocs,
-    limit,
-    orderBy,
-    query,
-    serverTimestamp,
-    setDoc,
-    where,
-    writeBatch,
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+  where,
+  writeBatch,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from './firebase';
+import { ACHIEVEMENTS } from '@/constants/achievements';
 
 function userConverter() {
   return {
@@ -28,6 +30,11 @@ function userConverter() {
         coins: user.coins,
         avatar: user.avatar,
         streakDays: user.streakDays,
+        sessionsCount: (user as any).sessionsCount || 0,
+        longestStreak: (user as any).longestStreak || user.streakDays || 0,
+        totalWorkMinutes: (user as any).totalWorkMinutes || 0,
+        achievementsXpTotal: (user as any).achievementsXpTotal || 0,
+        achievementsUnlocked: (user as any).achievementsUnlocked || [],
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       };
@@ -42,6 +49,11 @@ function userConverter() {
         coins: d.coins,
         avatar: d.avatar || {},
         streakDays: d.streakDays || 0,
+        sessionsCount: d.sessionsCount || 0,
+        longestStreak: d.longestStreak || d.streakDays || 0,
+        totalWorkMinutes: d.totalWorkMinutes || 0,
+        achievementsXpTotal: d.achievementsXpTotal || 0,
+        achievementsUnlocked: d.achievementsUnlocked || [],
         createdAt: d.createdAt?.toDate?.() || new Date(),
         updatedAt: d.updatedAt?.toDate?.() || new Date(),
       };
@@ -121,6 +133,11 @@ export async function ensureUserProfile(uid: string, displayName?: string) {
       coins: 0,
       avatar: {},
       streakDays: 0,
+      // nuevo campo para logros
+      sessionsCount: 0,
+      longestStreak: 0,
+      totalWorkMinutes: 0,
+      achievementsXpTotal: 0,
       createdAt: now,
       updatedAt: now,
     };
@@ -166,11 +183,21 @@ export async function awardOnPomodoroComplete(
   const u = userSnap.data();
   const newXp = u.xp + gainedXp;
   const newLevel = levelFromXp(newXp);
+  const isWork = payload.type === 'work';
+  const addedMinutes = isWork ? Math.round(payload.durationSec / 60) : 0;
+  const prevTotalMinutes = (u as any).totalWorkMinutes || 0;
+  const newTotalMinutes = prevTotalMinutes + addedMinutes;
+  const prevLongest = (u as any).longestStreak || u.streakDays || 0;
+  const newLongest = streakDays > prevLongest ? streakDays : prevLongest;
+
   batch.update(userRef, {
     xp: newXp,
     coins: u.coins + gainedCoins,
     level: newLevel,
     streakDays: streakDays,
+    longestStreak: newLongest,
+    totalWorkMinutes: newTotalMinutes,
+    sessionsCount: (u as any).sessionsCount ? (u as any).sessionsCount + 1 : 1,
     updatedAt: serverTimestamp(),
   });
 
@@ -218,3 +245,42 @@ export async function addInventoryItem(item: InventoryItem) {
   if (!item.uid) throw new Error('uid requerido');
   await addDoc(inventoryCol, item);
 }
+
+// --- Utilidades de migración / mantenimiento ---
+import { levelFromXp as _levelFromXp } from '@/utils/xp';
+
+export async function recalcUserLevel(uid: string) {
+  const snap = await getDoc(userDoc(uid));
+  if (!snap.exists()) return;
+  const u: any = snap.data();
+  const newLevel = _levelFromXp(u.xp || 0);
+  if (newLevel !== u.level) {
+    await updateDoc(userDoc(uid), { level: newLevel, updatedAt: serverTimestamp() });
+  }
+}
+
+export async function migrateAchievementXp(uid: string) {
+  const ref = userDoc(uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+  const u: any = snap.data();
+  if (u.achievementsXpTotal !== undefined) return; // ya migrado
+  const unlocked: string[] = u.achievementsUnlocked || [];
+  const expected = ACHIEVEMENTS.filter(a => unlocked.includes(a.id)).reduce((sum, a) => sum + a.xpReward, 0);
+  const newXp = (u.xp || 0) + expected;
+  const level = _levelFromXp(newXp);
+  await updateDoc(ref, {
+    xp: newXp,
+    level,
+    achievementsXpTotal: expected,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+/**
+ * Ejemplo de uso tras login (llamar una sola vez por usuario pre-existente):
+ * 
+ *   await migrateAchievementXp(uid);
+ *   await recalcUserLevel(uid); // redundante pero seguro
+ *   // luego refreshProfile(); para traer nivel actualizado al store
+ */

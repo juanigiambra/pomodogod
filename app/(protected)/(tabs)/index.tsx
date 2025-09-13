@@ -1,6 +1,7 @@
 // Pantalla Timer - español (AR)
 import { TimerDisplay } from '@/components/TimerDisplay';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { syncAchievements } from '@/services/achievementsService';
 import { awardOnPomodoroComplete } from '@/services/userService';
 import { usePomodoroStore } from '@/store/pomodoroStore';
 import { useThemeStore } from '@/store/themeStore';
@@ -63,6 +64,8 @@ export default function TimerScreen() {
 				const end = new Date();
 				const start = new Date(end.getTime() - workDuration * 1000);
 				const result = await awardOnPomodoroComplete(profile.uid, { startedAt: start, endedAt: end, durationSec: workDuration, type: 'work', streakDays: profile.streakDays + 1 });
+				// Sincroniza logros potencialmente nuevos
+				await syncAchievements(profile.uid);
 				Alert.alert('Recompensa', `¡+${result?.gainedXp} XP y +5 monedas!`);
 			} catch (e: any) { console.log(e); }
 		} else if (mode === 'work' && !profile) {

@@ -17,6 +17,11 @@ export interface UserProfile {
   coins: number;
   avatar: AvatarData;
   streakDays: number;
+  sessionsCount?: number; // total de sesiones completadas (para logros)
+  longestStreak?: number; // mayor racha histórica
+  totalWorkMinutes?: number; // minutos totales de trabajo (solo work sessions)
+  achievementsUnlocked?: string[]; // ids de logros desbloqueados
+  achievementsXpTotal?: number; // suma de xpReward de logros ya acreditados (para migraciones/auditoría)
   createdAt: Date;
   updatedAt: Date;
 }

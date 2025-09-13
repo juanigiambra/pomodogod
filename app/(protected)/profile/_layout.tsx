@@ -1,8 +1,8 @@
-import React from 'react';
-import { Stack, useRouter } from 'expo-router';
-import { Pressable, Text, View, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { Ionicons } from '@expo/vector-icons';
+import { Stack, useRouter } from 'expo-router';
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Layout stack para subsecciones de perfil con gesto de volver (swipe) habilitado

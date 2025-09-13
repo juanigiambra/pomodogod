@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native';
-import Animated, { useSharedValue, withSequence, withTiming, useAnimatedStyle, Easing } from 'react-native-reanimated';
-import { InventoryItem } from '@/types';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { InventoryItem } from '@/types';
+import React, { useCallback } from 'react';
+import { Pressable, StyleSheet, Text } from 'react-native';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 
 interface Props {
   item: InventoryItem;

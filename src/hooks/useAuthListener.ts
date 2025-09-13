@@ -1,7 +1,7 @@
 // Hook listener de auth - español (AR)
 import { auth, onAuthStateChanged } from '@/services/firebase';
-import { useUserStore } from '@/store/userStore';
 import { ensureUserProfile } from '@/services/userService';
+import { useUserStore } from '@/store/userStore';
 import { useEffect, useState } from 'react';
 
 export function useAuthListener() {

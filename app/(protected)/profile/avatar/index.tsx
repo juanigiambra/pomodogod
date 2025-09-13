@@ -3,14 +3,12 @@ import { AvatarPreview } from '@/components/AvatarPreview';
 import InventoryGridItem from '@/components/InventoryGridItem';
 import { useAppTheme } from '@/hooks/useAppTheme';
 // Servicios ahora gestionados vía inventoryStore
-import { equipItem, getInventory } from '@/services/userService';
 import { useInventoryStore } from '@/store/inventoryStore';
 import { useUserStore } from '@/store/userStore';
 import { InventoryItem } from '@/types';
-import React, { useEffect } from 'react';
-import { Alert, FlatList, StyleSheet, Text, Pressable, View, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated from 'react-native-reanimated';
+import React, { useEffect } from 'react';
+import { Alert, Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AvatarScreen() {

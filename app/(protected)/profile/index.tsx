@@ -1,14 +1,13 @@
 import { AvatarPreview } from '@/components/AvatarPreview';
-import ProgressBar from '@/components/ProgressBar';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { useUserStore } from '@/store/userStore';
 import { xpProgress } from '@/utils/xp';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 import React, { useEffect } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { useSharedValue, withTiming, useAnimatedStyle, Easing } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const { profile } = useUserStore();

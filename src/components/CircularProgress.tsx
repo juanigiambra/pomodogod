@@ -1,8 +1,8 @@
 // Progreso circular animado - español (AR)
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
+import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
-import Animated, { useSharedValue, withTiming, useAnimatedProps, Easing } from 'react-native-reanimated';
 
 // Crear componente animado para Circle
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);

@@ -1,7 +1,7 @@
 // Store de inventario - español (AR)
-import { create } from 'zustand';
+import { equipItem, getInventory } from '@/services/userService';
 import { InventoryItem } from '@/types';
-import { getInventory, equipItem } from '@/services/userService';
+import { create } from 'zustand';
 import { useUserStore } from './userStore';
 
 interface InventoryState {

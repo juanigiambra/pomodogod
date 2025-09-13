@@ -1,15 +1,14 @@
 // Pantalla Shop protegida - español (AR)
+import { ConfettiBurst } from '@/components/ConfettiBurst';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { purchaseItem } from '@/services/rewardsService';
+import { useInventoryStore } from '@/store/inventoryStore';
 import { useUserStore } from '@/store/userStore';
 import { SHOP_ITEMS } from '@/utils/constants';
-import { InventoryItem } from '@/types';
-import { useInventoryStore } from '@/store/inventoryStore';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, Pressable, View, RefreshControl } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ConfettiBurst } from '@/components/ConfettiBurst';
-import Animated, { useSharedValue, withSpring, useAnimatedStyle } from 'react-native-reanimated';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ShopScreen() {

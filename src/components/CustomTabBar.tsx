@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { View, Pressable, Text, StyleSheet, Platform } from 'react-native';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import Animated, { useSharedValue, withTiming, useAnimatedStyle, interpolate } from 'react-native-reanimated';
-import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '@/hooks/useAppTheme';
-import { spacing, radius } from '@/styles/designSystem';
+import { radius, spacing } from '@/styles/designSystem';
+import { Ionicons } from '@expo/vector-icons';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import React, { useEffect } from 'react';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const ICONS: Record<string, string> = {
   index: 'timer-outline',

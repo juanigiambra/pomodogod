@@ -1,7 +1,7 @@
+import CustomTabBar from '@/components/CustomTabBar';
 import { useAuthListener } from '@/hooks/useAuthListener';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import CustomTabBar from '@/components/CustomTabBar';
 
 export default function TabLayout() {
   useAuthListener();

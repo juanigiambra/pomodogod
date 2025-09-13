@@ -4,10 +4,10 @@ import { useAppTheme } from '@/hooks/useAppTheme';
 import { equipItem, getInventory } from '@/services/userService';
 import { useUserStore } from '@/store/userStore';
 import { InventoryItem } from '@/types';
-import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, Pressable, View, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { useSharedValue, withSequence, withTiming, useAnimatedStyle, Easing } from 'react-native-reanimated';
+import React, { useEffect, useState } from 'react';
+import { Alert, Dimensions, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 
 export default function AvatarScreen() {
 	const { uid, profile } = useUserStore();

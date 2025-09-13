@@ -1,17 +1,16 @@
 // Pantalla Timer - español (AR)
-import { PrimaryButton } from '@/components/PrimaryButton';
 import { TimerDisplay } from '@/components/TimerDisplay';
 import { useAppTheme } from '@/hooks/useAppTheme';
-import { useThemeStore } from '@/store/themeStore';
 import { awardOnPomodoroComplete } from '@/services/userService';
 import { usePomodoroStore } from '@/store/pomodoroStore';
+import { useThemeStore } from '@/store/themeStore';
 import { useUserStore } from '@/store/userStore';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Notifications from 'expo-notifications';
 import React, { useCallback, useEffect, useRef } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({

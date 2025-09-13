@@ -3,10 +3,10 @@ import { PrimaryButton } from '@/components/PrimaryButton';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { usePomodoroStore } from '@/store/pomodoroStore';
 import { useUserStore } from '@/store/userStore';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, View, Switch } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Alert, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import Animated, { FadeInUp, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

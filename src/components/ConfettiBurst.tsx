@@ -1,8 +1,8 @@
 // Simple confetti burst - español (AR)
+import { useAppTheme } from '@/hooks/useAppTheme';
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, withDelay, interpolate, Easing } from 'react-native-reanimated';
-import { useAppTheme } from '@/hooks/useAppTheme';
+import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface ConfettiBurstProps {
   triggerKey: number; // change to retrigger animation

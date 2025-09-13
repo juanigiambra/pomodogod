@@ -1,0 +1,69 @@
+// Reglas de seguridad Firestore - comentarios en español (AR)
+// NOTA: Si estabas en "modo prueba" y expiró, estas reglas aplicarán.
+// Ajustá tiempos o reduce validaciones si ves errores por campos faltantes al crear.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isNonNegative(n) {
+      return n is int && n >= 0;
+    }
+
+  match /users/{userId} {
+      allow read, update, delete: if isSignedIn() && request.auth.uid == userId;
+      allow create: if isSignedIn() && request.auth.uid == userId;
+
+      // Permitimos actualizaciones parciales siempre que no introduzcan valores inválidos.
+      // Validamos solo los campos presentes (para evitar errores cuando el cliente solo escribe xp/coins, etc.).
+      allow update: if isSignedIn()
+        && request.auth.uid == userId
+        && (
+          (!('xp' in request.resource.data) || isNonNegative(request.resource.data.xp))
+          && (!('coins' in request.resource.data) || isNonNegative(request.resource.data.coins))
+          && (!('level' in request.resource.data) || request.resource.data.level is int)
+          && (!('avatar' in request.resource.data) || request.resource.data.avatar is map)
+          && (!('streakDays' in request.resource.data) || request.resource.data.streakDays is int)
+        );
+
+      allow get: if isSignedIn() && request.auth.uid == userId;
+      allow list: if false; // no listar todos los usuarios
+    }
+
+  match /sessions/{sessionId} {
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.startedAt is timestamp
+        && request.resource.data.endedAt is timestamp
+        && request.resource.data.durationSec is int
+        && request.resource.data.type in ['work','shortBreak','longBreak']
+        && request.resource.data.completed is bool;
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow list: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+  match /inventory/{invId} {
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.itemId is string
+        && request.resource.data.category in ['hair','outfit','accessory','background']
+        && request.resource.data.equipped is bool;
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow update: if isSignedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.equipped is bool;
+      allow delete: if false;
+      allow list: if isSignedIn();
+    }
+
+    // Catálogo de la tienda (solo lectura). Si más tarde quieres administrar via panel admin, crear función isAdmin.
+    match /shopItems/{docId} {
+      allow read: if true; // público
+      allow write: if false; // bloquear escrituras desde el cliente
+    }
+  }
+}
